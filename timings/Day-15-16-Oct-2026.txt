@@ -3,3 +3,4 @@
 # 1 hour coding
 # 1 hour English reading
 # 1 hour Quesion Paper
+Learn Helm Chart
