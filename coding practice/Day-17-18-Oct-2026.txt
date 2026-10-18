@@ -1,0 +1,22 @@
+- name: Configure Auto-healing for Web Server
+  hosts: all
+  become: yes
+  tasks:
+    - name: Ensure nginx service is running
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+    - name: Setup auto-restart for nginx service
+      lineinfile:
+        path: /etc/systemd/system/nginx.service.d/override.conf
+        line: "Restart=always"
+        create: yes
+    - name: Reload systemd
+      command: systemctl daemon-reload
+🔹 Terraform — Multi-Cloud Infrastructure with AWS and Azure
+# AWS VPC
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
+}
+
