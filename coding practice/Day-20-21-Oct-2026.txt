@@ -1,0 +1,15 @@
+#Docker
+Flask Application
+from Flask import Flask
+app = Flask (-Name-)
+@app.rout('/')
+def home():
+  return "Hello Pathnex"
+app.run (host='0.0.0.0',port=5000)
+
+#Docker File
+FROM paython:3.11
+WOKDIR/opt/pathnex/flask-app
+copy./opt/pathnex/flask-app/
+RUN pip install flask
+CMD ["paython","/opt/pathnex/flask-app/app.py"]
