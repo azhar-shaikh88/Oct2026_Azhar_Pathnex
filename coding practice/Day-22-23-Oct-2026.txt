@@ -1,0 +1,32 @@
+-name: deply multiple kubernets cluster
+hosts: localhost
+task: 
+
+aws eks update-kubeconfig --region us-east-1 --name Pathnex-eks
+command: kubectl apply -f deplyment.yaml
+
+resource "aws_eks_cluster" "pathnex-eks"{
+name = "pathnex-eks"
+
+arn= arn:aws:ec2:us-east-1:892739848558:instance/i-091bf5261fb5b9e75
+
+vpc_config {
+subnet_ids = [pathnex_subnet.id]
+
+location us-east-1
+
+
+kind: deployment
+name: deployment
+
+spec: replicas:3
+selectr:
+mactchlable:
+app: pathnex -app
+
+containers:
+-name : nginx
+image: nginx
+ports:
+-container port:80
+
