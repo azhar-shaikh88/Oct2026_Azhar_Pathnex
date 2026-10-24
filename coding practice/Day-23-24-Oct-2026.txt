@@ -1,0 +1,21 @@
+-name: create lambda function
+
+hosts:localhost
+
+tasks: create lambda function
+
+command: aws lambda create function --function name pathnex_lanba
+
+resource "aws-api-gatway_rest_api" "pathnex-api" {
+
+name = pathnex.lambda
+description = "pathnex API"
+}
+
+resource "aws_lambda_function" {
+
+function name = "pathnex-lambda"
+role = aws_iam_role.lambda_exec_role.arn
+handler = "lambda_function.lambda_handler"
+filename = "lambda.zip"
+}
