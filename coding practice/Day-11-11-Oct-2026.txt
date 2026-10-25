@@ -1,0 +1,78 @@
+-name: install Helm
+hosts: all
+become: yes
+
+tasks:
+
+-name: download helm
+get url: https://www.githelm.com
+dest: /home/user/helm.tar.gz
+
+-name: extract helm
+unarchive:
+
+src: /home/user/helm.tar.gz
+
+dest: local/bin/helm
+
+remote_src:yes
+
+file:
+path:/user/local/bin/helm
+mode:'06777'
+
+---------------------------------------------
+pipeline {
+agent any{
+environment {
+
+image_name: 'pathnex-web-app'
+}
+
+stages{
+ stage('checkout'){
+{
+steps{
+git 'https://github.com'
+}
+}
+stage ('build docker image')
+steps{
+script{
+docker.with Registry("https:docker.io")
+doker.image(image).push (latest)
+}
+}
+}
+}
+stage (deploy kubernetes){
+
+steps{
+script{
+kubectl apply -f deployment.yaml
+}
+}
+}
+-----------------------------------------
+stages:
+-build
+-push
+-deploy
+
+build:
+stage:build
+script:
+-docker build -t pathnex-web-app
+
+push
+stage:push
+script:
+-docker login 
+-docker push  pathnex-web-app
+
+deploy:
+stage:deploy
+script:
+-helm repo add stable http://chart.helm
+-helm install pathnex-nginx stable/nginx-ingress
+
