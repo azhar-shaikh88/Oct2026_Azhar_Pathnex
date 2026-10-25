@@ -1,0 +1,22 @@
+-name: Backup and Restore Files
+hosts: all
+become: yes
+
+tasks: 
+- name: breate backup of etc directory
+  command: tar -cvzf/tmp/etc-backup.tar.gz/etc
+-name: copy backup to remote server
+copy: 
+src:src: /tmp/etc-backup.tar.gz
+        dest: /tmp/etc-backup.tar.gz
+    - name: Restore backup from remote server
+      command: tar -xzvf /tmp/etc-backup.tar.gz -C /
+🔹 Terraform — Create S3 Bucket with Cross-Region Replication
+resource "aws_s3_bucket" "pathnex_bucket" {
+  bucket = "pathnex-backup-bucket"
+  region = "us-east-1"
+
+  versioning {
+    enabled = true
+  }
+}
