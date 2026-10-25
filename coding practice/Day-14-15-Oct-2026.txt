@@ -1,0 +1,37 @@
+#Kubernetes - Helm chart for Redis with peristance
+helm install pathnex-redis bitnami/redis --set peristance.enabled=true --set persistance.size=8Gi
+
+#jenkinsfile - Multi-Environment Deployment
+pipeline{
+agent any
+enviroment{
+   IMAGE_Name = 'pathnex-web-app'
+   DEPLOY_ENV = 'Production'
+}
+
+stages{
+  stage('Build'){
+   steps{
+     echo 'Building Docker Image...'
+     docker.build("{env.IMAGE_Name}")
+	}
+}
+
+stage('Test') {
+   steps{
+     echo 'Runing tests...'
+}
+
+}stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    if (env.DEPLOY_ENV == 'production') {
+                        sh 'kubectl apply -f kubernetes/prod-deployment.yaml'
+                    } else {
+                        sh 'kubectl apply -f kubernetes/dev-deployment.yaml'
+                    }
+                }
+            }
+        }
+    }
+}
