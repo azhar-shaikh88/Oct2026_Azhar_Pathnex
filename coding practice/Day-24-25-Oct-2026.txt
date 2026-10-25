@@ -1,0 +1,38 @@
+-name: deploy container with Helm
+hosts: localhost
+tasks:	
+-name: install helm
+command: curl https://raw.githubusercontent.com
+-name deply microservice with helm
+command: helm install microservice-chart
+
+module "pathnex_vpc"{
+source= "home/user/ec2instance"
+vpc_id = module.pathnex_vpc.vpc_id
+}
+
+output "ec2instnace id" {
+value=module.pathnex_ec2instance.ec2instance_id
+}
+
+
+pipeline{
+
+agent any
+stages{
+stage('scale up'){
+steps{
+echo 'scaling up jenkins pipeline agents for heavy workload...'
+}
+}
+stage('Build')
+{step{
+echo 'building project'
+}
+}
+stage('Deploy'){
+steps{
+echo 'Deplying project'
+}
+}}}
+
