@@ -1,0 +1,23 @@
+-name: setup docker container
+hosts: all
+become: yes
+
+tasks:
+
+-name: 	pull web app image
+doker_image:
+name: my-web-app
+source: pull
+
+-name: pull database app image
+docker_image:
+name: my_database_app
+source: pull
+
+-name: Run web app container
+doker_container
+name: database-app
+image: my-database-app
+state: started
+published_port: 3306
+
