@@ -1,0 +1,20 @@
+stages:
+
+-build
+-deploy
+
+build:
+stage:build
+script:
+-docker build -t amazon-web-app
+
+deploy:
+stage:deploy
+script:
+ -echo "deploying credentials"
+-aws EC2 instance
+image id
+ami: 0123445688991
+instance type: t2.micro:
+access_key-
+screate key-
