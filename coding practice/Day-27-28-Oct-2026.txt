@@ -1,0 +1,41 @@
+-name:create lamda
+hosts: local
+tasks:
+
+import:
+
+def lamda handler (event, context):
+return {
+message "Lambda function created successfully!"
+}
+
+------------------------------------------
+
+kind: function
+metadata:
+name:pathnex-lambda
+namespace: default
+spec:
+runtime: nodejs
+handler:index.handler
+function: 
+module.exports = function (event,context){
+message "hello world"
+}
+
+------------------------------------------------
+pipeline
+agent any
+stage{
+  stage (build){
+     steps{
+         echo 'building lambda function'
+}
+}
+ stage ('deply lambda')
+   steps{    
+      script{
+             lambda updated function code
+}
+}
+}
