@@ -1,0 +1,69 @@
+
+host:local host
+become: yes
+
+tasks:
+ 
+  -name: Deployment
+command: docker-compose -f /home/local/deployment.yml
+
+resource "aws_vpc" {
+
+cidr blocks: "10.0.0.0"
+}
+
+resource "aws_instance" "pathnex"{
+
+ami="ami01234abcd556789"
+
+instance type = "t2.medium"
+count = 1
+key_name=patheenex.pem
+subnet id = subnet-0cebd3fa55f4eef64
+security_group = sg-0beed4b6159d9f6fa
+}
+
+-------------------------------------------
+kind: deployment
+metadata:
+name: pathnex
+spec:
+replicas:2
+selector:
+matchlables: 
+app: pathenx
+
+spec:
+containers:
+-name: nginx
+image:nginx
+ports: conternerport:80
+
+kind: Service
+metadata:
+name: pathnex-service
+spec:
+selecter: pathnex
+ports : 80
+
+--------------------------------
+
+service:
+frontend:
+image:nginx
+container_name: pathnex	
+ports: "80:80"
+
+backend:
+build: home/local/backend
+container_name: pathnex
+ports: "80:80"
+
+database:
+image:mysql:8
+container_name: pathnex
+environment:
+
+password: root
+
+
