@@ -1,0 +1,33 @@
+apiVersion/appsv1
+kind:Deployment
+metadata:
+name: pathnex-app
+spec:
+replicas-2
+selector:
+matchlabels:
+app:pathnex
+template:
+metadata:
+labels:
+app:pathnex-app
+spec:
+container:
+-name:nginx
+image:nginx:latest
+port:
+containerPort:80
+
+
+apiVersion:v1
+
+kind:service
+metadata:
+name:pathnex-service
+spec:
+selector:
+app:pathnex-app
+ports:
+port:80
+target port:80
+
