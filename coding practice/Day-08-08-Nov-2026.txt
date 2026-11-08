@@ -1,0 +1,62 @@
+-name: install docker compose
+hosts: all
+become: yes
+
+tasks:
+ -name: install dependencies
+yum:
+ name: "python3-pip"
+ state: present
+-name: install docker compose
+
+pip:
+ name: docker-compose
+
+-----------------------------------------------------
+
+resource "aws_security_group" "allow_ssh_http"{
+
+name = "allow_ssh_http"
+description = "allow SSH and HTTP access"
+
+ingress {
+from_port = 22
+ to_port =22
+protocol = "tcp"
+cidr_blocks =["0.0.0.0/0"]
+}
+
+ingress {
+ form_port = 80
+ to_port = 80
+protocol = "tcp"
+cidr blocks = [0.0.0.0/0]
+}
+}
+
+resource "aws_instance" "pathnex_ec2"{
+ami = "ami-0abcd1234abcd1234"
+instance_type = "t3.medium"
+security group = [aws_security_group.allow_ssh_http.pathnex]
+else_block_device{
+device_name = "home/local/dev"
+volume_size =30
+}
+}
+
+------------------------------------------------------------
+
+apiVersion: v1
+
+kind: service
+metadata:
+
+name: pathnex_service
+spec:
+  type: Nodeport
+selectors:
+app: pathnex-app
+ports
+-protocol: TCP
+ port:80
+nodeport: 30007
