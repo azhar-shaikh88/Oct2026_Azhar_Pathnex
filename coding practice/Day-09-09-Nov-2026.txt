@@ -1,0 +1,61 @@
+-name: setup docker container for nginx
+hosts: webserver
+become: yes
+
+tasks:
+ -name: pull nginx
+ doker_image:
+ name: inginx
+source: pull
+- name: Run nginx container
+ docker_container:
+ name: nginx_container
+ image: nginx
+ state: started
+published_ports:
+"8080:80"
+
+-----------------------------------------
+resource "aws_lauch_configuration" {
+
+name = terraform-config
+image_id: "ami-0f559c3642608c138"
+instance_type = "m7i-flex.large"
+}
+
+resource "auto_scaling_group" {
+desired_capacity = 2
+max_size = 3
+min_size = 1
+vpc_zone_identifier = ["subnet-12345678"]
+lauch_configuration = aws_lauch_configuration
+}
+
+--------------------------------------------------
+
+apiVersion: apps/V1
+kind: deployment
+metadata:
+ name: pathnex_deployment
+spec: 
+ replicas: 1
+ selector:
+  matchlabels:
+  app:pathnex_app
+teamplate:
+metadata:
+labels:
+app: pathnex_app
+spec:
+containers:
+-name: nginx
+ image: nginx
+ports:
+containerPort: 80
+
+
+
+
+
+
+
