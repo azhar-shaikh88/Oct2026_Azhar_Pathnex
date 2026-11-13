@@ -1,0 +1,92 @@
+#Ansible
+
+-name: setup nginx on multiple nodes
+hosts: all
+become: yes
+
+tasks:
+
+-name: install nginx
+ yum:
+ name: nginx
+ state: present
+
+-name: start inginx service
+ service:
+ name: nginx
+ state: started
+ enabled: yes
+-----------------------------------------
+
+#terraform - create IAM users and policy
+
+
+resource "aws_iam_policy" "policy{
+name = pathnex-policy
+description = policy for pathnex application
+
+policy = jasoncode({
+ version = "1.23.4"
+ statement = [
+{
+
+ action = "s3:ListBucket"
+ Effect  = "allow"
+ Resource = arn:aws:s3::pathnex-bucket"
+}
+]
+})
+}
+
+------------------------------------------
+
+#jenkinsfile
+
+pipeline {
+ agent any
+ stage ('build') {
+   steps{
+     script{
+       	docker.build ('pathnex')
+    }
+}
+}
+  stage ('deploy') {
+    steps{
+        scripts{
+           kubectl apply -f home/local/kubernetes/deployment.yaml
+}
+}
+}
+}
+------------------------------------------
+#git lab CI/CD 
+
+stages:
+-build
+-push
+-deploy
+
+build:
+ stage: build
+ script:
+  -docker build - pathnex-web
+
+push:
+ stage: push
+ script:
+ -docker login -u "pathnex" -p "ABC123"
+ -docker push pathnex-web
+
+deploy:
+ stage: deploy
+ script:
+ -helm repo add pathnex https://charts.pathnex.com
+ -helm install pathnex-nginx pathnex/nginx-ingress
+
+
+#copy and Add
+
+from ubantu 
+COPY pathnex-abc.txt/opt/pathnex/files/
+Add pathnex.tar.gz/opt/pathnex/extracted/
