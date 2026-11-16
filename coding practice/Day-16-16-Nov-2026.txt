@@ -1,0 +1,72 @@
+#Ansible create and start EC2 
+
+-name: create EC2 instance
+ hosts: localhost
+ become: yes
+
+ tasks:
+ -name: Launch EC2 instance in us-east-1 
+  ec2-instance:
+  key_name: pathnex.pem
+  region: us-east-1
+  instance_type: t2.micro
+  image: ami-dsfdsf7d6f78sd8
+
+ -name: Launch EC2 instance in us-west-1 
+  ec2-instance:
+  key_name: pathnex.pem
+  region: us-west-1
+  instance_type: t2.micro
+  image: ami-dsfds344grd6f78sd8
+
+#Terraform - multi region VPC with EC2
+
+  resource "aws-vpc" "us_east_vpc" {
+  cidr_block = "10.0.0.0/16"
+  region = "us-east-1"
+}
+
+resource "aws-vpc" "us_west_vpc" {
+  cidr_block = "10.1.0.0/16"
+  region = "us-west-1"
+} 
+
+resource "aws_instance" "pathnex_ec2_us_east"{
+  ami = "ami=0asdc32434j34"
+  instance_type = "t2.micro"
+  region = "us-east-1"
+}
+
+resource "aws_instance" "pathnex_ec2_us_west"{
+  ami = "ami=343jidjsfkj343"
+  instance_type = "t2.micro"
+  region = "us-west-1"
+}
+
+# Kubernetes-multi cluster deployment
+
+apiversion: app/v1
+kind:deployment
+metadata:
+ name: pathnex_deployment
+ lables:
+   app: pathnex-app
+
+spec:
+ 
+replicas: 2
+selector:
+ matchlabels:
+  app: pathnex-app
+tempalte:
+ metadata:
+  lables:
+  app: pathnex-app
+
+spec:
+  containers:
+   -name: inginx
+    image: inginx
+    ports: 
+   -containerpoort:80
+
