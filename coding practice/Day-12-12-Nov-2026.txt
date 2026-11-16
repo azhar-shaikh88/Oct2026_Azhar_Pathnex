@@ -1,0 +1,58 @@
+pipeline {
+agent any
+stages{
+ stage(build){
+steps{
+ docker.build ('pathnex')
+}
+}
+}
+stage('deploy'){
+steps{
+ script{
+ kubectl apply -f kubernetes/deployment.yaml
+}
+}
+}
+}
+------------------------------------------------------
+
+-name: setup inginx
+host:all
+become:yes
+
+tasks:
+-name: install nginx
+yum:
+ name: nginx
+ state:present
+
+-name: start nginx service
+service:
+ name:inginx
+ state:started
+enable:yes
+
+--------------------------------
+resource "aws_iamuser"{
+
+name = "pathnex_user"
+}
+
+resource "aws_iam_policy"{
+name = "pathnex_policy"
+
+description = "policy for pathnex applicaton"
+
+policy = abc.json({
+version "2026-10-17"
+statement = [
+{
+ Action = "s3:listbucket"
+ effect = "Allow"
+ resource = "arn:aws:s3:Pathnex-buket"
+}
+]
+})
+}
+
