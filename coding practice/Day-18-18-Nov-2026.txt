@@ -1,0 +1,41 @@
+#Ansible - config load blancing
+
+-name: setup load balancing
+hosts:all
+become:yes
+
+tasks:
+-name: Install HAProxy
+yum:
+ name: haproxy
+ state: present
+
+-name: config haproxy
+ template:
+ src: haproxy.cfg.j2
+ dest: /home/local/haproxy.cfg
+
+-name: start  HAproxy service
+ service:
+  name: haproxy
+  state: started
+  enabled: yes
+
+#Terraform auto-scaling
+
+resource "aws_lb" "Pathnex_lb"{
+internal = false
+load_balancer_type  = "application"
+security_groups = [aws_security_group.allow_ssh_http.id]
+subnets = [aws_subnet.public.id, aws_subnet.public2.id]
+}
+
+resource "autoscaling_group" "pathnex_asg" {
+desired _capacity = 3
+max_size = 5
+min_size = 2
+
+vpc_zone_identifier = [aws_subnet.public.id, aws_subnet.public2.id]
+lauch configuration  = aws_lauch_config.pathnex.config.id
+}
+
