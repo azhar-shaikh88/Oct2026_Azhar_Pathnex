@@ -1,0 +1,36 @@
+-name: setup promethus node exporter
+hosts: all
+become: yes
+tasks:
+ -name: install promethus node exporter
+yum:
+ name: promethus-node-exporter
+ state: present
+ -name: start promethus node exporter service
+ service:
+  name: promethus-node-exporter
+  state: started
+  enabled: yes	
+
+#Teraform - create cloudwatch Alarms
+
+resource "aws_cloude_mettic_alarm"  "pathnex_cpu_alarm" {
+alarm name: "pathnex-cpu-utilization-high"
+comparison_operator = "GreaterThanThreshold"
+evaluation_periods = "1"
+metric_name = "CPUUtilization"
+namespace = "AWS/EC2"
+period = "60"
+statistic = "Average"
+threshold = "80"
+
+dimension = {
+ InstanceId = aws_instance.pathnex_ec2.id
+}
+alarm_actions = [aws_sns_topic.pathnex_alerts.arn]
+}
+ 
+resource "aws_sns_topic" "pathnex_alerts"{
+name = "pathnex-alterts"
+}
+
