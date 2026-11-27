@@ -1,0 +1,78 @@
+#Pod...
+
+apiVersion: v1
+kind: Pod
+metadata:
+name: pathnex pod
+spec:
+containers:
+-name: nginx
+image: nginx:latest
+ports:
+ContainerPort:80
+------------------------
+apiVersion: pathnex/v1
+kind: deployment
+metadata:
+  name: pathnex-deployment
+spec:
+ replicas: 3
+ selectors:
+ mathchlables:
+   app:pathnex
+teamplate:
+metadata:
+labels:
+app: pathnex
+spec:
+ containers:
+ -name: nginx
+ image:nginx:latest
+ Port:
+ - ContainerPort:80
+---------------------------------
+#Replica Set
+
+apiVersion: apps-pathnex
+kind: ReplicaSet
+metadata:
+ name:pathnex-replicaset
+Spec:
+ replicas: 3
+ selectors:
+ matchlables:
+ app:pathnex
+teamplate:
+metadata:
+labales:
+app: pathnex
+
+spec:
+ Containters:
+ -name: nginx
+ image:nginx:latest
+Port:
+ ContainerPort:80
+---------------------------------
+#Stateful Set
+
+apiVersion: pathnex_appV1
+kind: stateful Set
+metadata:
+ name: pathnex-statefulSet
+Spec:
+ servicenName: "pathnex"
+replicas:3
+selectors:
+ matchlables:
+  app: pathnex
+teamplate:
+metadata:
+labals:
+app: pathnex
+spec:
+ containers:
+ -name:nginx
+image:nginx:latest
+Port:
+-ContainetPort:80
